@@ -28,14 +28,97 @@ The system runs fully on local infrastructure using **Ollama-powered local LLMs*
 
 ---
 
+## Model Architecture
+
+The system follows a **standard Retrieval-Augmented Generation (RAG) architecture**, optimized for **local execution and privacy preservation**.
+
+### Core Components
+
+1. **Document Loader**
+   - Ingests internal documents (PDF, DOCX, TXT)
+   - Extracts raw text using format-aware loaders
+
+2. **Text Chunking Layer**
+   - Splits documents into semantically meaningful chunks
+   - Applies overlap strategies to preserve context continuity
+
+3. **Embedding Model (Local)**
+   - Generates dense vector representations of text chunks
+   - Runs locally using Ollama-compatible embedding models
+
+4. **Vector Store (ChromaDB)**
+   - Stores embeddings and associated metadata
+   - Enables fast similarity-based retrieval
+
+5. **Retriever**
+   - Performs Top-K semantic search against ChromaDB
+   - Filters the most relevant document chunks for a query
+
+6. **Prompt Assembly Layer**
+   - Injects retrieved context into a controlled prompt template
+   - Applies system rules to enforce grounded responses
+
+7. **Local LLM (Ollama Runtime)**
+   - Generates answers using retrieved context only
+   - Ensures offline inference and deterministic execution
+
+---
+
+## Processing Pipeline
+
+The end-to-end processing pipeline consists of two distinct phases:
+
+---
+
+### 1. Indexing / Ingestion Pipeline
+
+This phase prepares documents for retrieval.
+
+**Steps:**
+1. Load internal documents from disk  
+2. Clean and normalize extracted text  
+3. Chunk text into fixed-size segments with overlap  
+4. Generate vector embeddings locally  
+5. Persist embeddings and metadata into ChromaDB  
+
+**Execution:**
+```bash
+uv run python src/ingest.py
+````
+
+This pipeline is typically executed **once per document update cycle**.
+
+---
+
+### 2. Query / Inference Pipeline
+
+This phase handles user questions and answer generation.
+
+**Steps:**
+
+1. Accept user query (CLI or Notebook)
+2. Convert query into embedding
+3. Perform Top-K similarity search in ChromaDB
+4. Assemble retrieved context into a structured prompt
+5. Generate response using a local LLM via Ollama
+6. Return a grounded, context-aware answer
+
+**Execution:**
+
+```bash
+uv run python src/main.py
+```
+
+---
+
 ## Technology Stack
 
-- **Python 3.10+**
-- **Ollama** (Local LLM runtime)
-- **ChromaDB** (Vector database)
-- **LangChain / Custom RAG orchestration**
-- **Jupyter Notebook**
-- **uv** (Python environment and dependency management)
+* **Python 3.10+**
+* **Ollama** (Local LLM runtime)
+* **ChromaDB** (Vector database)
+* **LangChain / Custom RAG orchestration**
+* **Jupyter Notebook**
+* **uv** (Python environment and dependency management)
 
 ---
 
@@ -44,16 +127,16 @@ The system runs fully on local infrastructure using **Ollama-powered local LLMs*
 ### 1. Install Ollama
 
 Download and install Ollama:
+
+```
+https://ollama.com
 ```
 
-[https://ollama.com](https://ollama.com)
-
-````
-
 Pull a local language model:
+
 ```bash
 ollama pull llama3
-````
+```
 
 ---
 
@@ -90,7 +173,7 @@ Place internal documents in the following directory:
 data/documents/
 ```
 
-Supported formats include:
+Supported formats:
 
 * PDF
 * DOCX
@@ -98,22 +181,15 @@ Supported formats include:
 
 ---
 
-### 5. Ingest Documents into the Vector Store
+### 5. Ingest Documents
 
 ```bash
 uv run python src/ingest.py
 ```
 
-This process:
-
-* Loads and parses documents
-* Chunks text into semantically meaningful segments
-* Generates embeddings
-* Persists vectors in ChromaDB
-
 ---
 
-### 6. Query the System (Script Mode)
+### 6. Query the System
 
 ```bash
 uv run python src/main.py
@@ -127,13 +203,13 @@ What is the annual leave policy during probation?
 
 ---
 
-### 7. Run via Jupyter Notebook (Optional)
+### 7. Jupyter Notebook Mode (Optional)
 
 ```bash
 uv run jupyter notebook
 ```
 
-Use the notebook interface to experiment with retrieval parameters, prompts, and model behavior interactively.
+Use notebooks for experimentation, debugging, and prompt iteration.
 
 ---
 
@@ -154,7 +230,7 @@ Use the notebook interface to experiment with retrieval parameters, prompts, and
 | Data Privacy          | Limited          | Full         |
 | External Connectivity | Required         | Not Required |
 | Vendor Lock-in        | High             | None         |
-| Custom Document Use   | Restricted       | Native       |
+| Custom Documents      | Restricted       | Native       |
 | Cost at Scale         | Variable         | Predictable  |
 
 ---
@@ -187,15 +263,4 @@ MIT License.
 Developed for privacy-first, enterprise-grade AI knowledge systems.
 Contributions and improvements are welcome.
 
-```
-
----
-
-### If you want next (recommended for portfolio impact):
-- Tight **1-paragraph GitHub repo description**
-- **Recruiter-optimized project summary** for your CV
-- **Badges** (Python | Ollama | Local-Only | MIT)
-- A **“Why this matters”** section tailored for AI/ML interviews
-
-Just tell me what you’d like to add.
 ```
