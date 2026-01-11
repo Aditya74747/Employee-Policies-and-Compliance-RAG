@@ -7,7 +7,6 @@ The system runs fully on local infrastructure using **Ollama-powered local LLMs*
 Repository:  
 https://github.com/Aditya74747/Employee-Policies-and-Compliance-RAG
 
----
 
 ## Key Capabilities
 
@@ -29,7 +28,7 @@ https://github.com/Aditya74747/Employee-Policies-and-Compliance-RAG
 - **Flexible Execution Modes**  
   Supports both **Jupyter Notebooks** for experimentation and **Python scripts** for structured execution.
 
----
+
 
 ## Model Architecture
 
@@ -58,7 +57,6 @@ This system follows a **standard Retrieval-Augmented Generation (RAG) architectu
 7. **Local LLM (Ollama Runtime – llama3.1:8b)**  
    Uses the `llama3.1:8b` model for response generation, chosen for its compact footprint, reliable instruction-following, and suitability for local RAG workloads without GPU dependency.
 
----
 
 ## Technology Stack
 
@@ -69,7 +67,7 @@ This system follows a **standard Retrieval-Augmented Generation (RAG) architectu
 * **Jupyter Notebook**
 * **uv** – Python environment and dependency management
 
----
+
 
 ## Getting Started
 
@@ -95,7 +93,6 @@ ollama serve
 ```
 
 
----
 
 ### 2. Clone the Repository
 
@@ -104,7 +101,7 @@ git clone https://github.com/Aditya74747/Employee-Policies-and-Compliance-RAG.gi
 cd Employee-Policies-and-Compliance-RAG
 ```
 
----
+
 
 ### 3. Set Up the Python Environment
 
@@ -122,7 +119,7 @@ uv add -r requirements.txt
 uv sync
 ```
 
----
+
 
 ### 4. Add Internal Documents
 
@@ -138,7 +135,7 @@ Supported formats:
 * DOCX
 * TXT
 
----
+
 
 ### 5. Run via Jupyter Notebook
 
@@ -147,7 +144,6 @@ uv run jupyter notebook
 ```
 Run all cells from top to bottom.
 
----
 
 ### 6. Query in the Notebook
 
@@ -173,7 +169,7 @@ Response: Based on the provided policy excerpts, here is a list of things that y
 ```
 
 
----
+
 
 ## Representative Use Cases
 
@@ -183,20 +179,19 @@ Response: Based on the provided policy excerpts, here is a list of things that y
 * Employee self-service knowledge assistant
 * Audit and policy verification support
 
----
+
 
 ## Disclaimer
 
 This project is intended for **internal and private document analysis** only.
 Users are responsible for ensuring compliance with applicable **organizational, legal, and data-governance requirements**.
 
----
+
 
 ## License
 
 MIT License.
 
----
 
 ## Author
 
