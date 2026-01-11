@@ -179,14 +179,19 @@ Response: Based on the provided policy excerpts, here is a list of things that y
 * Employee self-service knowledge assistant
 * Audit and policy verification support
 
-
-
-## Disclaimer
+## 📌 Disclaimer
 
 This project is intended for **internal and private document analysis** only.
 Users are responsible for ensuring compliance with applicable **organizational, legal, and data-governance requirements**.
 
+This repository contains **code only**.
 
+Any documents such as employee handbooks, computer usage policies, or HR policies
+used during development were obtained from publicly available sources
+(e.g., the Holiday Market website) and are **not included in this repository**.
+
+All third-party documents remain the property of their respective owners.
+This project does not claim ownership or redistribution rights over any such content.
 
 ## License
 
