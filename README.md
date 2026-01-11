@@ -1,8 +1,11 @@
-# Local Privacy-Preserving RAG for Internal Documents
+# Employee Policies and Compliance RAG
 
 A **privacy-first Retrieval-Augmented Generation (RAG) system** designed to securely query internal organizational documents such as **employee handbooks, HR policies, IT/computer-use guidelines, compliance documents, and internal SOPs** — entirely **offline and without reliance on external APIs**.
 
 The system runs fully on local infrastructure using **Ollama-powered local LLMs**, a **Chroma vector database**, and a **Python-based RAG pipeline**, ensuring **data confidentiality, deterministic behavior, and reproducible execution**.
+
+Repository:  
+https://github.com/Aditya74747/Employee-Policies-and-Compliance-RAG
 
 ---
 
@@ -15,7 +18,7 @@ The system runs fully on local infrastructure using **Ollama-powered local LLMs*
   Responses are generated strictly from retrieved document context, reducing hallucinations and improving factual reliability.
 
 - **Local LLM Inference via Ollama**  
-  Compatible with models such as `llama3`, `mistral`, `gemma`, and other Ollama-supported architectures.
+  Uses the `llama3.1:8b` model, selected for its optimal balance of **model size, inference speed, and practical usability** in local, resource-constrained environments.
 
 - **Semantic Search with ChromaDB**  
   Efficient vector-based retrieval for scalable document collections.
@@ -30,95 +33,41 @@ The system runs fully on local infrastructure using **Ollama-powered local LLMs*
 
 ## Model Architecture
 
-The system follows a **standard Retrieval-Augmented Generation (RAG) architecture**, optimized for **local execution and privacy preservation**.
+This system follows a **standard Retrieval-Augmented Generation (RAG) architecture**, optimized for **local execution and enterprise data privacy**.
 
 ### Core Components
 
-1. **Document Loader**
-   - Ingests internal documents (PDF, DOCX, TXT)
-   - Extracts raw text using format-aware loaders
+1. **Document Loader**  
+   Ingests internal documents (PDF, DOCX, TXT) using format-aware loaders.
 
-2. **Text Chunking Layer**
-   - Splits documents into semantically meaningful chunks
-   - Applies overlap strategies to preserve context continuity
+2. **Text Chunking Layer**  
+   Splits documents into semantically meaningful chunks with overlap to preserve context continuity.
 
-3. **Embedding Model (Local)**
-   - Generates dense vector representations of text chunks
-   - Runs locally using Ollama-compatible embedding models
+3. **Embedding Model (Local)**  
+   Generates dense vector representations locally using Ollama-compatible embedding models, ensuring that both document indexing and query embeddings remain fully offline.
 
-4. **Vector Store (ChromaDB)**
-   - Stores embeddings and associated metadata
-   - Enables fast similarity-based retrieval
+4. **Vector Store (ChromaDB)**  
+   Stores embeddings and metadata to enable fast similarity-based retrieval.
 
-5. **Retriever**
-   - Performs Top-K semantic search against ChromaDB
-   - Filters the most relevant document chunks for a query
+5. **Retriever**  
+   Performs Top-K semantic search against the vector database.
 
-6. **Prompt Assembly Layer**
-   - Injects retrieved context into a controlled prompt template
-   - Applies system rules to enforce grounded responses
+6. **Prompt Assembly Layer**  
+   Injects retrieved context into a controlled prompt template with grounding rules.
 
-7. **Local LLM (Ollama Runtime)**
-   - Generates answers using retrieved context only
-   - Ensures offline inference and deterministic execution
-
----
-
-## Processing Pipeline
-
-The end-to-end processing pipeline consists of two distinct phases:
-
----
-
-### 1. Indexing / Ingestion Pipeline
-
-This phase prepares documents for retrieval.
-
-**Steps:**
-1. Load internal documents from disk  
-2. Clean and normalize extracted text  
-3. Chunk text into fixed-size segments with overlap  
-4. Generate vector embeddings locally  
-5. Persist embeddings and metadata into ChromaDB  
-
-**Execution:**
-```bash
-uv run python src/ingest.py
-````
-
-This pipeline is typically executed **once per document update cycle**.
-
----
-
-### 2. Query / Inference Pipeline
-
-This phase handles user questions and answer generation.
-
-**Steps:**
-
-1. Accept user query (CLI or Notebook)
-2. Convert query into embedding
-3. Perform Top-K similarity search in ChromaDB
-4. Assemble retrieved context into a structured prompt
-5. Generate response using a local LLM via Ollama
-6. Return a grounded, context-aware answer
-
-**Execution:**
-
-```bash
-uv run python src/main.py
-```
+7. **Local LLM (Ollama Runtime – llama3.1:8b)**  
+   Uses the `llama3.1:8b` model for response generation, chosen for its compact footprint, reliable instruction-following, and suitability for local RAG workloads without GPU dependency.
 
 ---
 
 ## Technology Stack
 
 * **Python 3.10+**
-* **Ollama** (Local LLM runtime)
-* **ChromaDB** (Vector database)
+* **Ollama** – Local LLM runtime
+* **ChromaDB** – Vector database
 * **LangChain / Custom RAG orchestration**
 * **Jupyter Notebook**
-* **uv** (Python environment and dependency management)
+* **uv** – Python environment and dependency management
 
 ---
 
@@ -132,26 +81,34 @@ Download and install Ollama:
 https://ollama.com
 ```
 
-Pull a local language model:
+Pull a local model:
 
 ```bash
-ollama pull llama3
+ollama pull nomic-embed-text
+ollama pull llama3.1:8b
 ```
+
+Start Ollama:
+
+```bash
+ollama serve
+```
+
 
 ---
 
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/local-rag-internal-docs.git
-cd local-rag-internal-docs
+git clone https://github.com/Aditya74747/Employee-Policies-and-Compliance-RAG.git
+cd Employee-Policies-and-Compliance-RAG
 ```
 
 ---
 
 ### 3. Set Up the Python Environment
 
-Install `uv` (one-time setup):
+Install `uv`:
 
 ```bash
 pip install uv
@@ -160,6 +117,8 @@ pip install uv
 Create the environment and install dependencies:
 
 ```bash
+uv venv
+uv add -r requirements.txt
 uv sync
 ```
 
@@ -167,10 +126,10 @@ uv sync
 
 ### 4. Add Internal Documents
 
-Place internal documents in the following directory:
+Place documents in the folder:
 
 ```
-data/documents/
+data/
 ```
 
 Supported formats:
@@ -181,35 +140,38 @@ Supported formats:
 
 ---
 
-### 5. Ingest Documents
-
-```bash
-uv run python src/ingest.py
-```
-
----
-
-### 6. Query the System
-
-```bash
-uv run python src/main.py
-```
-
-Example query:
-
-```
-What is the annual leave policy during probation?
-```
-
----
-
-### 7. Jupyter Notebook Mode (Optional)
+### 5. Run via Jupyter Notebook
 
 ```bash
 uv run jupyter notebook
 ```
+Run all cells from top to bottom.
 
-Use notebooks for experimentation, debugging, and prompt iteration.
+---
+
+### 6. Query in the Notebook
+
+Example query and response:
+
+```
+Query: What are the things that I should not do in the workplace?
+
+Response: Based on the provided policy excerpts, here is a list of things that you should not do in the workplace:
+
+* Engage in any activity that is illegal under local, state, federal or international law while utilizing Holiday Market-owned resources. (Computer Use Policy.pdf | chunk 9)
+* Participate in system and network activities that are strictly prohibited, with no exceptions (e.g. hacking, unauthorized access). (Computer Use Policy.pdf | chunk 9)
+* Make threats, even as a joke or prank, during working hours or in company vehicles. (handbook.pdf | chunk 34)
+* Commit violent acts or threaten violence during non-working hours or away from the workplace, unless:
+	+ The associate's conduct adversely affects the Company's reputation. (A) (handbook.pdf | chunk 34)
+	+ The Company determines that the effects of the off-duty conduct may be carried into the workplace and/or pose a threat to Company associates, visitors or property. (B) (handbook.pdf | chunk 34)
+	+ The conduct results in the conviction of the associate for an assault or other felony. (C) (handbook.pdf | chunk 34)
+* Work for any company in direct competition with Holiday Market without written consent. (handbook.pdf | chunk 83)
+* Solicit other associates during working time. (handbook.pdf | chunk 83)
+* Distribute literature on company premises during working time, except as permitted by management. (handbook.pdf | chunk 83)
+* Enter or remain in the interior of the building or other working area unless you are on duty or scheduled to work. (handbook.pdf | chunk 83)
+
+```
+
 
 ---
 
@@ -223,32 +185,10 @@ Use notebooks for experimentation, debugging, and prompt iteration.
 
 ---
 
-## Rationale for Local RAG
-
-| Dimension             | Cloud-Based LLMs | This System  |
-| --------------------- | ---------------- | ------------ |
-| Data Privacy          | Limited          | Full         |
-| External Connectivity | Required         | Not Required |
-| Vendor Lock-in        | High             | None         |
-| Custom Documents      | Restricted       | Native       |
-| Cost at Scale         | Variable         | Predictable  |
-
----
-
 ## Disclaimer
 
 This project is intended for **internal and private document analysis** only.
 Users are responsible for ensuring compliance with applicable **organizational, legal, and data-governance requirements**.
-
----
-
-## Roadmap
-
-* Source-level citations in generated responses
-* Multi-model routing and evaluation
-* Web-based interface (Streamlit / FastAPI)
-* Role-based document access controls
-* Usage telemetry and feedback mechanisms
 
 ---
 
@@ -260,7 +200,5 @@ MIT License.
 
 ## Author
 
-Developed for privacy-first, enterprise-grade AI knowledge systems.
+Developed by **Aditya Ghatage** for privacy-first, enterprise-grade AI knowledge systems.
 Contributions and improvements are welcome.
-
-```
